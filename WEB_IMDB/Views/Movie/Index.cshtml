@@ -1,0 +1,50 @@
+@model IEnumerable<Movie>
+@{
+     ViewData["Title "] = "Movies";
+}
+<h2>
+     Movies
+     <i class="bi bi-film"></i>
+</h2>
+<a class="btn btn-primary" asp-action="Create">
+     <i class="bi bi-bookmark-plus-fill"></i>
+     Add Movie
+</a>
+<div class="mt-4">
+     @if (!Model.Any())
+     {
+          <div class="alert alert-warning" role = "alert">
+               No movie found
+               <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+
+     }
+     else
+     {
+          <div class="row">
+               @foreach (Movie movie in Model)
+               {
+                    <div class="col-md-12 mb-3" >
+                         <div class="row g-0">
+                              <div  class="col-md-2" style = "background-image: url(data:image\/*;base64,@(Convert.ToBase64String(movie.Image)))">
+                              </div>
+                              <div class = "col-md-10">
+                                   <div class="card-body">
+                                        <h5 class="card-title">@movie.Title @movie.Year </h5>
+                                        <p class="card-text text-justify">@(movie.StoryLine.Length>500?$"{movie.StoryLine.Substring(0,500)}....":movie.StoryLine)</p>
+                                   </div>
+                                   <div>
+                                        <p class="card-text">
+                                             <i class="bi bi-star-fill text-warning"></i>
+                                             <small class="text-body-secondary">
+                                                  @movie.Rate
+                                             </small>
+                                        </p>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               }
+          </div>
+     }
+</div>
