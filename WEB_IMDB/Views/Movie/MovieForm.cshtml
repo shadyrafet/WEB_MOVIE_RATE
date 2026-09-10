@@ -1,15 +1,17 @@
 @model WEB_IMDB.ViewModel.MovieFromViewModel
 @{
-    ViewData["Title"] = "Create Movie";
+    var isEdit = Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Edit Movie" : "Create Movie";
 }
 @section Styles
 {
     <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"/>
 }
-<h2>Create Movie</h2>
+<h2>@(isEdit ? "Edit Movie" : "Create Movie")</h2>
 <section>
-    <div class="col-md-4">
+    <div class="col-md-4"> 
         <form method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label class="text-muted" asp-for="Title"></label>
@@ -25,12 +27,12 @@
             </div>
             <div class="form-group w-50" >
                 <label class="text-muted" asp-for="Year"></label>
-                <input type="text" class="form-control" asp-for="Year" value=""/>
+                <input type="text" class="form-control" asp-for="Year"/>
                 <span asp-validation-for="Year" class = "text-danger"></span>
             </div>
             <div class="form-group w-50" >
                 <label class="text-muted" asp-for="Rate"></label>
-                <input type="number" class="form-control" asp-for="Rate" value=""/>
+                <input type="number" class="form-control" asp-for="Rate"/>
                 <span asp-validation-for="Rate" class = "text-danger"></span>
             </div>
             <div class="form-group " >
@@ -39,13 +41,16 @@
                 <span asp-validation-for="StoryLine" class = "text-danger"></span>
             </div>
             
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" asp-for="Image" accept="image/*"/>
-                <label class="custom-file-label" asp-for="Image"></label>
-                <span asp-validation-for="Image" class = "text-danger"></span>
-
-
+            <div class="form-group">
+                <label class="text-muted" asp-for="Image"></label>
+                <input type="file" class="form-control" asp-for="Image" accept="image/*"/>
+                @if(isEdit){
+                    <small class="form-text text-muted">Leave empty to keep the current image.</small>
+                }else{
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                }
             </div>
+            
             <button type="submit" class = "btn btn-primary mt-4" >Save</button>
             <a asp-action="Index" class="btn btn-outline-secondary mt-4" >
                 Cancel
@@ -55,8 +60,15 @@
         </form>
     </div>
     <div class="col-md-4">
-        <div id="ImagePreview" class="d-none">
-            <img src = "" alt = "Poster" class="img-thumbnail"/>
+        <div id="ImagePreview" class="@(isEdit ? "" : "d-none")">
+            @if (isEdit && Model.Image is WEB_IMDB.Helpers.ByteArrayFormFile bytes)
+            {
+                <img src="data:image/*;base64,@(Convert.ToBase64String(bytes.GetBytes()))" alt="Poster" class="img-thumbnail"/>
+            }
+            else
+            {
+                <img src="" alt="Poster" class="img-thumbnail"/>
+            }
         </div>
 
     </div>

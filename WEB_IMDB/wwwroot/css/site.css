@@ -32,3 +32,9 @@ body {
 textarea{
   resize: none;
 }
+.image{
+  min-height: 236px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
